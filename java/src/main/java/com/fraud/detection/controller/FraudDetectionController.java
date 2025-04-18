@@ -40,4 +40,10 @@ public class FraudDetectionController {
         List<Transaction> transactions = fraudDetectionService.getTransactionsByCard(cardNumber);
         return ResponseEntity.ok(transactions);
     }
+
+    @GetMapping("/alerts/all")
+    public ResponseEntity<List<FraudAlert>> getAllAlerts() {
+        List<FraudAlert> alerts = fraudDetectionService.getAllAlerts();
+        return ResponseEntity.ok(alerts);
+    }
 } 

@@ -74,9 +74,15 @@ public class FraudDetectionService {
         FraudAlert alert = fraudAlertRepository.findById(alertId)
             .orElseThrow(() -> new RuntimeException("Alert not found"));
         
+        // Update alert status
         alert.setAlertStatus("RESOLVED");
         alert.setResolvedAt(LocalDateTime.now());
         fraudAlertRepository.save(alert);
+        
+        // Update associated transaction status
+        Transaction transaction = alert.getTransaction();
+        transaction.setStatus("APPROVED");
+        transactionRepository.save(transaction);
     }
 
     @Transactional(readOnly = true)
@@ -87,5 +93,10 @@ public class FraudDetectionService {
     @Transactional(readOnly = true)
     public List<FraudAlert> getActiveAlerts() {
         return fraudAlertRepository.findByAlertStatus("NEW");
+    }
+
+    @Transactional(readOnly = true)
+    public List<FraudAlert> getAllAlerts() {
+        return fraudAlertRepository.findAll();
     }
 } 
